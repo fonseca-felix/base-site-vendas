@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { CheckCircle, Package, RefreshCw, LogOut, ShieldAlert, ShoppingBag, Tags, XCircle } from 'lucide-react';
+import { CheckCircle, Package, RefreshCw, ShieldAlert, ShoppingBag, Tags, XCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import AdminProducts from '../components/AdminProducts';
@@ -10,7 +10,7 @@ const API_URL = '/api';
 export default function Admin() {
   const { user, token, login, logout } = useAuth();
   const navigate = useNavigate();
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeMainTab, setActiveMainTab] = useState<'orders' | 'products'>('orders');
 

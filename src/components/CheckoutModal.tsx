@@ -6,10 +6,10 @@ import { useAuth } from '../context/AuthContext';
 
 const API_URL = '/api';
 
-export default function CheckoutModal({ product, onClose }) {
+export default function CheckoutModal({ product, onClose }: { product: any, onClose: any }) {
   const [step, setStep] = useState(1); // 1: confirm, 2: paying, 3: success
   const [loading, setLoading] = useState(false);
-  const [pixData, setPixData] = useState(null);
+  const [pixData, setPixData] = useState<any>(null);
   const [notifiedAdmin, setNotifiedAdmin] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const { user } = useAuth();
@@ -34,7 +34,7 @@ export default function CheckoutModal({ product, onClose }) {
 
   // Polling for payment status
   useEffect(() => {
-    let interval;
+    let interval: any;
     if (step === 2 && pixData) {
       interval = setInterval(async () => {
         try {
