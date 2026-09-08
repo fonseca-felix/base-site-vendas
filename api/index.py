@@ -26,14 +26,15 @@ app.add_middleware(
 # Create uploads directory if it doesn't exist
 # We are now using Firebase Storage, no local uploads directory needed.
 
-api_router = FastAPI()
+# Vercel serverless routing fix
+app.include_router(products.router, prefix="/api")
+app.include_router(payments.router, prefix="/api")
+app.include_router(admin.router, prefix="/api")
+app.include_router(auth_users.router, prefix="/api")
 
-api_router.include_router(products.router)
-api_router.include_router(payments.router)
-api_router.include_router(admin.router)
-api_router.include_router(auth_users.router)
-
-app.mount("/api", api_router)
+@app.get("/api/ping")
+def ping():
+    return {"status": "ok"}
 
 @app.get("/")
 def read_root():
