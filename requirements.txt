@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+firebase-admin
+python-dotenv
+passlib[bcrypt]
+PyJWT
+qrcode[pil]
+python-multipart
