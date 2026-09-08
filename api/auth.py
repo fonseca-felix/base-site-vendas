@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta
-from passlib.context import CryptContext
+
 import jwt
 
 # Configuracao de seguranca
@@ -8,14 +8,19 @@ SECRET_KEY = os.getenv("JWT_SECRET", "super-secret-ecommerce-key-do-not-share")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 # 24 horas
 
-# Gerenciador de senhas seguras (bcrypt)
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
 
+# Gerenciador de senhas seguras (bcrypt) direto para evitar bug do passlib na Vercel
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    if not hashed_password:
+        return False
+    try:
+        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+    except Exception:
+        return False
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()

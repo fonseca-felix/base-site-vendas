@@ -60,24 +60,7 @@ def login(user: schemas.CustomerLogin):
     admin_doc = db.collection("users").document(user.email.strip()).get()
     
     # Se o email for o oficial da loja ou se existir na coleção de admins
-    # Se o email for o oficial da loja
-    is_admin_by_email = user.email.lower().strip() == "fxmatatodosmito@gmail.com"
-    print(f"is_admin_by_email: {is_admin_by_email}")
-    
-    # Para garantir que o usuário consiga entrar AGORA MESMO, qualquer senha será aceita para este e-mail mestre.
-    if is_admin_by_email:
-        print("-> Login Master Aprovado")
-        access_token = create_access_token(data={"sub": user.email, "role": "admin"})
-        return {
-            "access_token": access_token,
-            "token_type": "bearer",
-            "user": {
-                "id": user.email,
-                "name": "Administrador",
-                "email": user.email,
-                "role": "admin"
-            }
-        }
+    # O login master estava fixo, mas agora a senha já foi gerada e está no banco de dados.
         
     if admin_doc.exists:
         admin_data = admin_doc.to_dict()
