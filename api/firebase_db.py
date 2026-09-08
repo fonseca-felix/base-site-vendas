@@ -11,6 +11,8 @@ def init_firebase():
         firebase_cred_json = os.getenv("FIREBASE_CREDENTIALS")
         if firebase_cred_json:
             cred_dict = json.loads(firebase_cred_json)
+            if "private_key" in cred_dict:
+                cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
             cred = credentials.Certificate(cred_dict)
         else:
             # fallback to local file if available
