@@ -89,26 +89,27 @@ def notify_payment(order_id: str, file: UploadFile = File(...)):
     
     if order_data.get("status") == "created":
         try:
-            # Upload to Firebase Storage
-            from firebase_admin import storage
-            import uuid
+            # Upload to Cloudinary
+            import cloudinary
+            import cloudinary.uploader
             
-            bucket = storage.bucket()
-            file_ext = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
-            filename = f"receipts/{order_id}_{uuid.uuid4().hex[:8]}.{file_ext}"
+            # Cloudinary requires configuration from env vars automatically (CLOUDINARY_URL)
+            # or we can use specific ones
             
-            blob = bucket.blob(filename)
-            blob.upload_from_file(file.file, content_type=file.content_type)
-            blob.make_public()
+            upload_result = cloudinary.uploader.upload(
+                file.file,
+                folder="receipts",
+                resource_type="auto"
+            )
             
-            receipt_url = blob.public_url
+            receipt_url = upload_result.get("secure_url")
             
             order_ref.update({
                 "status": "pending",
                 "receipt_url": receipt_url
             })
         except Exception as e:
-            print("Error uploading to Firebase Storage:", e)
+            print("Error uploading to Cloudinary:", e)
             raise HTTPException(status_code=500, detail="Failed to upload receipt")
             
     return {"message": "Admin notificado e comprovante salvo", "receipt_url": receipt_url if 'receipt_url' in locals() else None}

@@ -9,6 +9,8 @@ const API_URL = '/api';
 export default function CheckoutModal({ product, onClose }: { product: any, onClose: any }) {
   const [step, setStep] = useState(1); // 1: confirm, 2: paying, 3: success
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [pixData, setPixData] = useState<any>(null);
   const [notifiedAdmin, setNotifiedAdmin] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
@@ -17,6 +19,7 @@ export default function CheckoutModal({ product, onClose }: { product: any, onCl
   // Create Pix
   const handleGeneratePix = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await axios.post(`${API_URL}/payments/create_pix`, {
         product_id: product.id,
@@ -26,7 +29,7 @@ export default function CheckoutModal({ product, onClose }: { product: any, onCl
       setPixData(res.data);
       setStep(2);
     } catch (err) {
-      alert("Erro ao gerar Pix.");
+      setError("Erro ao gerar Pix. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -54,7 +57,8 @@ export default function CheckoutModal({ product, onClose }: { product: any, onCl
   const copyToClipboard = () => {
     if (pixData?.qr_code) {
       navigator.clipboard.writeText(pixData.qr_code);
-      alert("Pix Copia e Cola copiado!");
+      setSuccessMsg("Pix Copia e Cola copiado!");
+      setTimeout(() => setSuccessMsg(null), 3000);
     }
   };
 
@@ -71,6 +75,9 @@ export default function CheckoutModal({ product, onClose }: { product: any, onCl
               <p style={{ margin: 0 }}>Valor Total:</p>
               <h3 style={{ fontSize: '2rem', color: 'var(--success-color)', margin: 0 }}>R$ {product.price.toFixed(2)}</h3>
             </div>
+            
+            {error && <div style={{ color: '#ff4444', marginBottom: '16px', textAlign: 'center' }}>{error}</div>}
+            
             <button 
               className="btn btn-primary" 
               style={{ width: '100%', padding: '16px' }}
@@ -94,6 +101,7 @@ export default function CheckoutModal({ product, onClose }: { product: any, onCl
             <button className="btn" onClick={copyToClipboard} style={{ width: '100%', marginBottom: '24px', background: 'rgba(255,255,255,0.1)' }}>
               <Copy size={18} /> Pix Copia e Cola
             </button>
+            {successMsg && <div style={{ color: 'var(--success-color)', marginBottom: '16px', textAlign: 'center' }}>{successMsg}</div>}
 
             {!notifiedAdmin ? (
               <div style={{ background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '8px' }}>
@@ -102,16 +110,23 @@ export default function CheckoutModal({ product, onClose }: { product: any, onCl
                 <input 
                   type="file" 
                   accept="image/*,.pdf"
-                  onChange={(e) => setReceiptFile(e.target.files ? e.target.files[0] : null)}
+                  onChange={(e) => {
+                    setReceiptFile(e.target.files ? e.target.files[0] : null);
+                    setError(null);
+                  }}
                   style={{ marginBottom: '16px', width: '100%', padding: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}
                 />
+                
+                {error && <div style={{ color: '#ff4444', marginBottom: '16px', textAlign: 'center', fontSize: '0.9rem' }}>{error}</div>}
 
                 <button 
                   className="btn btn-primary" 
                   style={{ width: '100%', background: receiptFile ? 'var(--success-color)' : 'rgba(255,255,255,0.1)', cursor: receiptFile ? 'pointer' : 'not-allowed' }}
-                  disabled={!receiptFile}
+                  disabled={!receiptFile || loading}
                   onClick={async () => {
                     if (!receiptFile) return;
+                    setLoading(true);
+                    setError(null);
                     try {
                       const formData = new FormData();
                       formData.append('file', receiptFile);
@@ -122,13 +137,16 @@ export default function CheckoutModal({ product, onClose }: { product: any, onCl
                         }
                       });
                       setNotifiedAdmin(true);
-                    } catch (e) {
+                    } catch (e: any) {
                       console.error(e);
-                      alert("Erro ao enviar o comprovante.");
+                      setError(e.response?.data?.detail || "Erro ao enviar o comprovante. Tente novamente.");
+                    } finally {
+                      setLoading(false);
                     }
                   }}
                 >
-                  <CheckCircle size={18} /> Já paguei (Enviar Comprovante)
+                  {loading ? <Loader2 className="animate-spin" size={18} /> : <CheckCircle size={18} />} 
+                  {loading ? "Enviando..." : "Já paguei (Enviar Comprovante)"}
                 </button>
               </div>
             ) : (
