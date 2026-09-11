@@ -6,12 +6,12 @@ echo    Iniciando E-Commerce Premium (Pix)
 echo ==========================================
 echo.
 
-if not exist "node_modules\" (
-    echo [!] Instalando dependencias do Frontend (Node.js)...
+if not exist "node_modules" (
+    echo [!] Instalando dependencias do Frontend Node.js...
     call npm install
 )
 
-if not exist "api\venv\" (
+if not exist "api\venv" (
     echo [!] Criando ambiente virtual do Python...
     cd api
     python -m venv venv
@@ -21,10 +21,10 @@ if not exist "api\venv\" (
     cd ..
 )
 
-echo [1/2] Iniciando o servidor Backend (FastAPI + Firebase) na porta 8000...
+echo [1/2] Iniciando o servidor Backend FastAPI + Firebase na porta 8000...
 start "Backend API" cmd /c "cd api && call .\venv\Scripts\activate.bat && uvicorn index:app --port 8000 --reload"
 
-echo [2/2] Iniciando o servidor Frontend (React + Vite)...
+echo [2/2] Iniciando o servidor Frontend React + Vite...
 start "Frontend Site" cmd /c "npm run dev"
 
 echo.
