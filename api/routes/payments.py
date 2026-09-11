@@ -92,9 +92,13 @@ def notify_payment(order_id: str, file: UploadFile = File(...)):
             # Upload to Cloudinary
             import cloudinary
             import cloudinary.uploader
+            import os
             
-            # Cloudinary requires configuration from env vars automatically (CLOUDINARY_URL)
-            # or we can use specific ones
+            cloudinary.config(
+                cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+                api_key=os.getenv("CLOUDINARY_API_KEY", "715881363392545"),
+                api_secret=os.getenv("CLOUDINARY_API_SECRET", "WK-ez_7bwou96CR4_XT3op7CBRA")
+            )
             
             upload_result = cloudinary.uploader.upload(
                 file.file,
