@@ -238,7 +238,7 @@ export default function Admin() {
                     </p>
                     {order.receipt_url && (
                       <button 
-                        onClick={() => window.open(`${API_URL}${order.receipt_url}`, '_blank')}
+                        onClick={() => window.open(order.receipt_url.startsWith('http') ? order.receipt_url : `${API_URL}${order.receipt_url}`, '_blank')}
                         className="btn btn-primary"
                         style={{ width: '100%', padding: '8px', fontSize: '0.9rem', background: '#007aff' }}
                       >
