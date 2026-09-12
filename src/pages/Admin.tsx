@@ -32,7 +32,7 @@ export default function Admin() {
         logout();
         navigate('/login');
       } else {
-        alert("Erro ao buscar pedidos.");
+        console.error("Erro ao buscar pedidos.");
       }
     } finally {
       setLoading(false);
@@ -47,20 +47,19 @@ export default function Admin() {
       // Atualizar a lista local
       setOrders(orders.map(o => (o as any).id === orderId ? { ...o, status: 'paid' } : o));
     } catch (err) {
-      alert("Erro ao aprovar pedido.");
+      console.error("Erro ao aprovar pedido.");
     }
   };
 
   const rejectOrder = async (orderId: string) => {
     try {
-      if (!window.confirm("Tem certeza que deseja marcar este pedido como não pago e recusá-lo?")) return;
       await axios.put(`${API_URL}/admin/orders/${orderId}/reject`, null, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Atualizar a lista local
       setOrders(orders.map(o => (o as any).id === orderId ? { ...o, status: 'rejected' } : o));
     } catch (err) {
-      alert("Erro ao recusar pedido.");
+      console.error("Erro ao recusar pedido.");
     }
   };
 

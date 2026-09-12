@@ -42,7 +42,6 @@ export default function AdminProducts() {
       setProducts(res.data);
     } catch (err) {
       console.error(err);
-      alert('Erro ao buscar produtos');
     } finally {
       setLoading(false);
     }
@@ -93,12 +92,10 @@ export default function AdminProducts() {
       fetchProducts();
     } catch (err) {
       console.error(err);
-      alert('Erro ao salvar produto');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir este produto?')) return;
     try {
       await axios.delete(`${API_URL}/admin/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -106,7 +103,6 @@ export default function AdminProducts() {
       fetchProducts();
     } catch (err) {
       console.error(err);
-      alert('Erro ao excluir produto');
     }
   };
 

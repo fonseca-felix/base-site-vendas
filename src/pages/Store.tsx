@@ -70,7 +70,7 @@ export default function Store() {
                       className="btn btn-primary"
                       onClick={() => {
                         if (!user) {
-                          alert('Por favor, faça login ou cadastre-se para comprar.');
+                          console.error('Por favor, faça login ou cadastre-se para comprar.');
                           navigate('/login');
                         } else {
                           setSelectedProduct(product);
@@ -122,7 +122,7 @@ export default function Store() {
                       className="btn btn-primary"
                       onClick={() => {
                         if (!user) {
-                          alert('Por favor, faça login ou cadastre-se para comprar.');
+                          console.error('Por favor, faça login ou cadastre-se para comprar.');
                           navigate('/login');
                         } else {
                           setSelectedProduct(product);
