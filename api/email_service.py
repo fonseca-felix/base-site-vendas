@@ -14,6 +14,7 @@ SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_PASS = os.getenv("SMTP_PASS", "")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173").rstrip('/')
 
 def _send_email(to_email: str, subject: str, html_body: str):
     if not SMTP_USER or not SMTP_PASS:
@@ -53,7 +54,7 @@ def send_welcome_email(to_email: str, name: str):
             <p>Aproveite nossos produtos exclusivos com pagamento instantâneo via Pix.</p>
             <br>
             <p style="text-align: center;">
-                <a href="http://localhost:5173/loja" style="background-color: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                <a href="{FRONTEND_URL}/loja" style="background-color: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
                     Ir para a Loja
                 </a>
             </p>
@@ -70,7 +71,7 @@ def send_welcome_email(to_email: str, name: str):
 
 def send_password_reset_email(to_email: str, token: str):
     subject = "Recuperação de Senha - Premium Store"
-    reset_link = f"http://localhost:5173/reset-password?token={token}"
+    reset_link = f"{FRONTEND_URL}/reset-password?token={token}"
     html_body = f"""
     <html>
       <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
