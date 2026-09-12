@@ -100,8 +100,9 @@ def notify_payment(order_id: str, file: UploadFile = File(...)):
                 api_secret=os.getenv("CLOUDINARY_API_SECRET", "WK-ez_7bwou96CR4_XT3op7CBRA")
             )
             
+            file_content = file.file.read()
             upload_result = cloudinary.uploader.upload(
-                file.file,
+                file_content,
                 folder="receipts",
                 resource_type="auto"
             )
