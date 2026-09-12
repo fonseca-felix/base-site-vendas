@@ -108,7 +108,7 @@ export default function AdminProducts() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div className="admin-controls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h3 style={{ margin: 0 }}>Catálogo de Produtos</h3>
         <button onClick={() => openModal()} className="btn btn-primary" style={{ background: 'var(--accent-color)' }}>
           <Plus size={18} /> Novo Produto

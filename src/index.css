@@ -243,3 +243,65 @@ p {
 .text-center { text-align: center; }
 .mt-4 { margin-top: 1rem; }
 .mb-4 { margin-bottom: 1rem; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 0;
+    margin-bottom: 32px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .glass-panel {
+    padding: 16px;
+  }
+  
+  .modal-content {
+    margin: 16px;
+    width: calc(100% - 32px);
+    max-height: calc(100vh - 32px);
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: 10px 16px;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr; /* Stack products on very small screens */
+  }
+
+  .admin-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+  }
+
+  .admin-controls > div {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .admin-tabs {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
