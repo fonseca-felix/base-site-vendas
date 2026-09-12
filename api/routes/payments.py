@@ -95,9 +95,9 @@ def notify_payment(order_id: str, file: UploadFile = File(...)):
             import os
             
             cloudinary.config(
-                cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME", "tinjvbyp"),
-                api_key=os.getenv("CLOUDINARY_API_KEY", "715881363392545"),
-                api_secret=os.getenv("CLOUDINARY_API_SECRET", "WK-ez_7bwou96CR4_XT3op7CBRA")
+                cloud_name="tinjvbyp",
+                api_key="715881363392545",
+                api_secret="WK-ez_7bwou96CR4_XT3op7CBRA"
             )
             
             file_content = file.file.read()
@@ -114,8 +114,10 @@ def notify_payment(order_id: str, file: UploadFile = File(...)):
                 "receipt_url": receipt_url
             })
         except Exception as e:
-            print("Error uploading to Cloudinary:", e)
-            raise HTTPException(status_code=500, detail="Failed to upload receipt")
+            print("Error uploading to Cloudinary:", str(e))
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Erro Cloudinary: {str(e)}")
             
     return {"message": "Admin notificado e comprovante salvo", "receipt_url": receipt_url if 'receipt_url' in locals() else None}
 
